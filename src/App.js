@@ -4,7 +4,7 @@ import './App.css';
 
 function App() {
 const initialState = {
-	url: 'https://back.shopandshow.ru/api/v2/slider/?id=1',
+	url: 'http://back.shopandshow.ru/api/v2/slider/?id=1',
 	method: 'GET',
 	headers: "{'Content-Type': 'application/json'}",
 	body: '',
