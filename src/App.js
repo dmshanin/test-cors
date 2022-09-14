@@ -6,11 +6,12 @@ function App() {
 const initialState = {
 	url: 'https://back.shopandshow.ru/api/v2/slider/?id=1',
 	method: 'GET',
-	headers: '',
+	headers: "{'Content-Type': 'application/json'}",
 	body: '',
 }
 const [ store, setStore ] = useState(initialState);
   const fetchData = async ({ url, method, headers, body}) => {
+console.log('data', { url, method, headers, body});
 	const params = body ? { body } : {};
         const response = await fetch(url, {
             method,
@@ -41,8 +42,10 @@ const [ store, setStore ] = useState(initialState);
   const handleSubmit = (event) => {
     event.preventDefault();
 	fetchData({ ...store }).then((res) => {
+console.log('res', res)
 setStore(initialState)
 }).catch((err) => {
+console.log('err', err)
 setStore(initialState)
 })
   }
@@ -55,7 +58,7 @@ return null;
     <div className="App">
       <header className="App-header">
 
-<form  onSubmit={handleSubmit}
+<form onSubmit={handleSubmit}
           className="form" >
 
         <label>
@@ -68,7 +71,7 @@ return null;
 
 <label>
           method: <br />
-<select name="method" defaultValue="GET" value={store.method} onChange={handleInputChange}>
+<select name="method" value={store.method} onChange={handleInputChange}>
   <option value="GET">GET</option>
   <option value="POST">POST</option>
 </select>
