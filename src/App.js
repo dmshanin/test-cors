@@ -1,11 +1,21 @@
+import { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+const initialState = {
+	url: 'https://back.shopandshow.ru/api/v2/slider/?id=1',
+	method: 'GET',
+	headers: '',
+	body: '',
+}
+const [ store, setStore ] = useState(initialState);
   const fetchData = async ({ url, method, headers, body}) => {
+	const params = body ? { body } : {};
         const response = await fetch(url, {
-            method:      method,
+            method,
             headers,
+		...params
         });
 
         const result = await response.json();
@@ -17,16 +27,40 @@ function App() {
         return result;
     };
 
+ const handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    setStore({
+      [name]: value
+    });
+  }
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+	fetchData({ ...store }).then((res) => {
+setStore(initialState)
+}).catch((err) => {
+setStore(initialState)
+})
+  }
+
+if (!store) {
+return null;
+}
+
   return (
     <div className="App">
       <header className="App-header">
 
-<form
+<form  onSubmit={handleSubmit}
           className="form" >
 
         <label>
           url: <br />
-          <input type="text" value='' onChange='' />
+          <input type="text" name="url" value={store.url} onChange={handleInputChange} />
         </label>
 
 <br />
@@ -34,8 +68,8 @@ function App() {
 
 <label>
           method: <br />
-<select>
-  <option selected value="GET">GET</option>
+<select name="method" defaultValue="GET" value={store.method} onChange={handleInputChange}>
+  <option value="GET">GET</option>
   <option value="POST">POST</option>
 </select>
         </label>
@@ -46,9 +80,20 @@ function App() {
 
 
 <label>
-          header: <br />
-<textarea>
-  Привет! Тут просто немного текста внутри тега textarea
+          headers: <br />
+<textarea name="headers" value={store.headers} onChange={handleInputChange}>
+
+</textarea>
+        </label>
+
+<br />
+<br />
+
+
+<label>
+          body: <br />
+<textarea name="body" value={store.body} onChange={handleInputChange}>
+
 </textarea>
         </label>
 
